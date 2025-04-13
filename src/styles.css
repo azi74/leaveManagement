@@ -1,0 +1,350 @@
+/* Phthalo Green Color Theme */
+:root {
+    --phthalo-green: #123524;
+    --light-green: #e8f5e9;
+    --accent-green: #4caf50;
+    --white: #ffffff;
+}
+
+body {
+    background-color: var(--white);
+    color: var(--phthalo-green);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: var(--white) !important;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid var(--light-green);
+}
+
+.navbar-brand {
+    color: var(--phthalo-green) !important;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-right: 2rem;
+}
+
+.nav-link {
+    color: var(--phthalo-green) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--accent-green) !important;
+}
+
+.navbar-toggler {
+    border-color: var(--phthalo-green) !important;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2818, 53, 36, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Center and space navbar items */
+.navbar-collapse {
+    justify-content: center;
+}
+
+.navbar-nav {
+    align-items: center;
+}
+
+/* Active Page Indicator */
+.nav-link.active {
+    color: var(--accent-green) !important;
+    font-weight: 600;
+    position: relative;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 1rem;
+    right: 1rem;
+    height: 3px;
+    background-color: var(--accent-green);
+    border-radius: 3px;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--phthalo-green);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-green);
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    color: var(--phthalo-green);
+    border-color: var(--phthalo-green);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--phthalo-green);
+    color: var(--white);
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    background-color: white;
+    color: var(--phthalo-green);
+    font-weight: 600;
+    border-bottom: none;
+}
+
+/* Footer Styles */
+.footer {
+    background-color: var(--phthalo-green);
+    color: var(--white);
+    padding: 2rem 0;
+    margin-top: auto;
+}
+
+.footer a {
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: var(--light-green);
+}
+
+/* Main content padding to account for fixed navbar */
+main {
+    padding-top: 80px;
+    flex: 1;
+    background-image: url("./bg.PNG");
+}
+
+/* Hero Section */
+.hero {
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+    margin-top: 5rem;
+    align-items: center;
+}
+
+/* Progress Bar */
+.progress {
+    height: 10px;
+    border-radius: 5px;
+    background-color: #d1e8d2;
+}
+
+.progress-bar {
+    background-color: var(--accent-green);
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: var(--accent-green);
+    box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+}
+
+/* Utility Classes */
+.text-accent {
+    color: var(--accent-green);
+}
+
+.bg-light-green {
+    background-color: var(--light-green);
+}
+
+/* ====================== */
+/* MEDIA QUERIES */
+/* ====================== */
+
+/* Large devices (desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .hero {
+        padding: 6rem 0;
+    }
+}
+
+/* Medium devices (tablets, 992px to 1199px) */
+@media (max-width: 1199px) {
+    .navbar-brand {
+        font-size: 1.3rem;
+        margin-right: 1.5rem;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 0.8rem !important;
+        margin: 0 0.3rem;
+    }
+    
+    .hero {
+        padding: 3.5rem 0;
+    }
+}
+
+/* Small devices (landscape phones, 768px to 991px) */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        padding-top: 1rem;
+    }
+    
+    .navbar-nav {
+        margin-bottom: 1rem;
+    }
+    
+    .nav-link.active::after {
+        display: none;
+    }
+    
+    .hero {
+        margin-top: 3rem;
+        padding: 3rem 0;
+    }
+    
+    .footer .col-md-6,
+    .footer .col-md-3 {
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+}
+
+/* Extra small devices (portrait phones, 576px to 767px) */
+@media (max-width: 767px) {
+    body {
+        padding-top: 60px;
+    }
+    
+    main {
+        padding-top: 60px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+        margin-right: 1rem;
+    }
+    
+    .btn-primary,
+    .btn-outline-primary {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .hero {
+        padding: 2.5rem 0;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .footer {
+        padding: 1.5rem 0;
+    }
+}
+
+/* Tiny devices (phones, less than 576px) */
+@media (max-width: 575px) {
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 0.5rem !important;
+        margin: 0 0.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .hero {
+        padding: 2rem 0;
+    }
+    
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+    
+    .hero .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .footer {
+        text-align: center;
+    }
+    
+    .footer h5 {
+        margin-bottom: 1rem;
+    }
+    
+    .footer ul {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Modal specific responsiveness */
+@media (max-width: 767px) {
+    .modal-dialog {
+        margin: 1rem auto;
+    }
+    
+    .modal-content {
+        border-radius: 0;
+    }
+}
+
+/* Form specific responsiveness */
+@media (max-width: 575px) {
+    .form-control {
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        font-size: 0.9rem;
+    }
+}
+
+/* Card hover effects on mobile */
+@media (hover: none) {
+    .card:hover {
+        transform: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+}
