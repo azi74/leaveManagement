@@ -1,7 +1,4 @@
-```
 # College Leave Management System
-
-![Project Preview](./preview.jpg) <!-- Add a screenshot if available -->
 
 A web-based application for students to manage and track leave requests with their college administration.
 
@@ -29,18 +26,9 @@ A web-based application for students to manage and track leave requests with the
 
 ### Installation
 
-1. Clone the repository:   ```bash
-https://github.com/azi74/leaveManagement.git
-```
-
-2. Navigate to the project directory:
-   bash
-
-   Copy
-
-   ```
-   cd college-leave-management
-   ```
+1. Clone the repository:
+   https://github.com/azi74/leaveManagement.git
+2. cd college-leave-management
 3. Open `index.html` in your preferred browser.
 
 ## Usage
@@ -58,8 +46,6 @@ https://github.com/azi74/leaveManagement.git
 * Manage leave approvals through admin panel
 
 ## File Structure
-
-Copy
 
 ```
 college-leave-management/
