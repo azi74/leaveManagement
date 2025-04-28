@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply Leave | College Leave Management</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Apply Leave | College Leave Management</title> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" 
+    rel="stylesheet"> 
+    <!-- Bootstrap CSS --> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <!-- Custom CSS --> 
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Toast Notification -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toast-title">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-message"></div>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
@@ -32,6 +44,10 @@
                         <a class="nav-link active" href="apply-leave.html">Apply Leave</a>
                     </li>
                 </ul>
+                <div class="d-flex align-items-center" id="userProfile">
+                    <span class="me-3" id="usernameDisplay"></span>
+                    <button class="btn btn-outline-danger btn-sm" id="logoutBtn">Logout</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -52,15 +68,15 @@
                     <div class="col-lg-8">
                         <div class="card">
                             <div class="card-body p-4">
-                                <form>
+                                <form id="leaveForm">
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label for="fullName" class="form-label">Full Name</label>
-                                            <input type="text" class="form-control" id="fullName" required>
+                                            <input type="text" class="form-control" id="fullName" required readonly>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="rollNumber" class="form-label">Roll Number</label>
-                                            <input type="text" class="form-control" id="rollNumber" required>
+                                            <input type="text" class="form-control" id="rollNumber" required readonly>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="leaveType" class="form-label">Leave Type</label>
@@ -74,13 +90,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label for="department" class="form-label">Department</label>
-                                            <select class="form-select" id="department" required>
-                                                <option value="">Select department</option>
-                                                <option>Computer Science</option>
-                                                <option>Electrical Engineering</option>
-                                                <option>Mechanical Engineering</option>
-                                                <option>Business Administration</option>
-                                            </select>
+                                            <input type="text" class="form-control" id="department" required readonly>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="startDate" class="form-label">Start Date</label>
@@ -129,5 +139,96 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+    <script>
+        // Load user data into form
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const toastLive = document.getElementById('liveToast');
+            const toast = new bootstrap.Toast(toastLive);
+            
+            if (!currentUser) {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            // Fill user data
+            document.getElementById('fullName').value = currentUser.name;
+            document.getElementById('rollNumber').value = currentUser.regNumber;
+            document.getElementById('department').value = currentUser.department.toUpperCase() + ' - ' + currentUser.course.toUpperCase();
+            
+            // Set min date for leave (today)
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').min = today;
+            document.getElementById('endDate').min = today;
+            
+            // Handle form submission
+            document.getElementById('leaveForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const startDate = new Date(document.getElementById('startDate').value);
+                const endDate = new Date(document.getElementById('endDate').value);
+                
+                if (startDate > endDate) {
+                    document.getElementById('toast-title').textContent = 'Error';
+                    document.getElementById('toast-message').textContent = 'End date must be after start date';
+                    document.querySelector('.toast-header').className = 'toast-header text-white bg-danger';
+                    toast.show();
+                    return;
+                }
+                
+                // Create leave application
+                const leaveApplication = {
+                    id: Date.now(),
+                    type: document.getElementById('leaveType').value,
+                    startDate: document.getElementById('startDate').value,
+                    endDate: document.getElementById('endDate').value,
+                    reason: document.getElementById('reason').value,
+                    status: 'Pending',
+                    submittedAt: new Date().toISOString()
+                };
+                
+                // Update user data
+                currentUser.leaves = currentUser.leaves || [];
+                currentUser.leaves.push(leaveApplication);
+                
+                // Update in users array
+                const users = JSON.parse(localStorage.getItem('users'));
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex !== -1) {
+                    users[userIndex] = currentUser;
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+                
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                document.getElementById('toast-title').textContent = 'Success';
+                document.getElementById('toast-message').textContent = 'Leave application submitted successfully!';
+                document.querySelector('.toast-header').className = 'toast-header text-white bg-success';
+                toast.show();
+                
+                // Reset form
+                document.getElementById('leaveForm').reset();
+                document.getElementById('fullName').value = currentUser.name;
+                document.getElementById('rollNumber').value = currentUser.regNumber;
+                document.getElementById('department').value = currentUser.department.toUpperCase() + ' - ' + currentUser.course.toUpperCase();
+            });
+            
+            // Update end date min when start date changes
+            document.getElementById('startDate').addEventListener('change', function() {
+                document.getElementById('endDate').min = this.value;
+            });
+            
+            // Handle logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                localStorage.removeItem('currentUser');
+                window.location.href = '../index.html';
+            });
+            
+            // Display username
+            document.getElementById('usernameDisplay').textContent = currentUser.name;
+        });
+    </script>
 </body>
 </html>

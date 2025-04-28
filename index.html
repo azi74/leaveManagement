@@ -13,6 +13,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 <body>
+    <!-- Toast Notification -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toast-title">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-message"></div>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
@@ -34,13 +45,17 @@
                         <a class="nav-link" href="./src/apply-leave.html">Apply Leave</a>
                     </li>
                 </ul>
-                <div class="d-flex">
+                <div class="d-flex" id="authButtons">
                     <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#signupModal">
                         Sign Up
                     </a>
                     <a href="#" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
                         Login
                     </a>
+                </div>
+                <div class="d-flex align-items-center d-none" id="userProfile">
+                    <span class="me-3" id="usernameDisplay"></span>
+                    <button class="btn btn-outline-danger btn-sm" id="logoutBtn">Logout</button>
                 </div>
             </div>
         </div>
@@ -53,10 +68,10 @@
                 <h1 class="display-4 fw-bold mb-4">College Leave Management System</h1>
                 <p class="lead mb-5">Efficiently manage and track leave requests with our streamlined platform</p>
                 <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                    <a href="./src/apply-leave.html" class="btn btn-primary btn-lg px-4">
+                    <a href="./src/apply-leave.html" class="btn btn-primary btn-lg px-4" id="applyLeaveBtn">
                         Apply for Leave
                     </a>
-                    <a href="./src/attendance.html" class="btn btn-outline-primary btn-lg px-4">
+                    <a href="./src/attendance.html" class="btn btn-outline-primary btn-lg px-4" id="viewAttendanceBtn">
                         View Attendance
                     </a>
                 </div>
@@ -102,94 +117,108 @@
         </div>
     </footer>
 
-  <!-- Sign Up Modal -->
-<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="signupModalLabel">Student Registration</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="signupForm">
-                    <h6 class="mb-3">Personal Information</h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="signupName" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="signupName" required>
+    <!-- Sign Up Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signupModalLabel">Student Registration</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="signupForm">
+                        <h6 class="mb-3">Personal Information</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="signupName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="signupName" required>
+                                <div class="invalid-feedback">Please provide your full name.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="signupDob" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="signupDob" required>
+                                <div class="invalid-feedback">Please provide your date of birth.</div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="signupDob" class="form-label">Date of Birth</label>
-                            <input type="date" class="form-control" id="signupDob" required>
-                        </div>
-                    </div>
 
-                    <h6 class="mt-4 mb-3">Academic Information</h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="registrationNumber" class="form-label">Registration Number</label>
-                            <input type="text" class="form-control" id="registrationNumber" required>
+                        <h6 class="mt-4 mb-3">Academic Information</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="registrationNumber" class="form-label">Registration Number</label>
+                                <input type="text" class="form-control" id="registrationNumber" required>
+                                <div class="invalid-feedback">Please provide your registration number.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="courseSelect" class="form-label">Course</label>
+                                <select class="form-select" id="courseSelect" required>
+                                    <option value="" selected disabled>Select Course</option>
+                                    <option value="btech">B.Tech</option>
+                                    <option value="mtech">M.Tech</option>
+                                    <option value="bca">BCA</option>
+                                    <option value="mca">MCA</option>
+                                    <option value="bba">BBA</option>
+                                    <option value="mba">MBA</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your course.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="departmentSelect" class="form-label">Department</label>
+                                <select class="form-select" id="departmentSelect" required>
+                                    <option value="" selected disabled>Select Department</option>
+                                    <option value="cse">Computer Science</option>
+                                    <option value="ece">Electronics</option>
+                                    <option value="mech">Mechanical</option>
+                                    <option value="civil">Civil</option>
+                                    <option value="mba">Business Administration</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your department.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sectionSelect" class="form-label">Section</label>
+                                <select class="form-select" id="sectionSelect" required>
+                                    <option value="" selected disabled>Select Section</option>
+                                    <option value="A">Section A</option>
+                                    <option value="B">Section B</option>
+                                    <option value="C">Section C</option>
+                                    <option value="D">Section D</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your section.</div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="courseSelect" class="form-label">Course</label>
-                            <select class="form-select" id="courseSelect" required>
-                                <option value="" selected disabled>Select Course</option>
-                                <option value="btech">B.Tech</option>
-                                <option value="mtech">M.Tech</option>
-                                <option value="bca">BCA</option>
-                                <option value="mca">MCA</option>
-                                <option value="bba">BBA</option>
-                                <option value="mba">MBA</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="departmentSelect" class="form-label">Department</label>
-                            <select class="form-select" id="departmentSelect" required>
-                                <option value="" selected disabled>Select Department</option>
-                                <option value="cse">Computer Science</option>
-                                <option value="ece">Electronics</option>
-                                <option value="mech">Mechanical</option>
-                                <option value="civil">Civil</option>
-                                <option value="mba">Business Administration</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="sectionSelect" class="form-label">Section</label>
-                            <select class="form-select" id="sectionSelect" required>
-                                <option value="" selected disabled>Select Section</option>
-                                <option value="A">Section A</option>
-                                <option value="B">Section B</option>
-                                <option value="C">Section C</option>
-                                <option value="D">Section D</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <h6 class="mt-4 mb-3">Account Credentials</h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="signupPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="signupPassword" required>
+                        <h6 class="mt-4 mb-3">Account Credentials</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="signupEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="signupEmail" required>
+                                <div class="invalid-feedback">Please provide a valid email.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="signupPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="signupPassword" required minlength="6">
+                                <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="signupConfirmPassword" required>
+                                <div class="invalid-feedback">Passwords must match.</div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="signupConfirmPassword" required>
-                        </div>
-                    </div>
 
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary">Complete Registration</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <p class="mb-0">Already registered? 
-                    <a href="#" class="text-primary fw-bold" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Login here</a>
-                </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Complete Registration</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <p class="mb-0">Already registered? 
+                        <a href="#" class="text-primary fw-bold" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Login here</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -199,14 +228,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="loginForm">
                         <div class="mb-3">
                             <label for="loginEmail" class="form-label">Email address</label>
                             <input type="email" class="form-control" id="loginEmail" required>
+                            <div class="invalid-feedback">Please provide your email.</div>
                         </div>
                         <div class="mb-3">
                             <label for="loginPassword" class="form-label">Password</label>
                             <input type="password" class="form-control" id="loginPassword" required>
+                            <div class="invalid-feedback">Please provide your password.</div>
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">Login</button>
@@ -214,14 +245,15 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <p class="mb-0">Don't have an account? <a href="mailto:aboobackerasi193@gmail.com?subject=Leave%20Management%20System%20Account%20Request" class="text-accent">Contact administrator</a></p>
+                    <p class="mb-0">Don't have an account? <a href="#" class="text-primary fw-bold" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#signupModal">Sign up here</a></p>
                 </div>
             </div>
         </div>
     </div>
-    
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="./src/script.js"></script>
 </body>
 </html>
